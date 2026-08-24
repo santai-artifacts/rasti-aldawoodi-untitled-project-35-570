@@ -209,8 +209,8 @@ export default {
     }
 
     // ── Static ──
-    if (path === "/" || path === "/index.html") return serveFile("index.html", "text/html; charset=utf-8");
-    if (path === "/admin" || path === "/admin.html") return serveFile("admin.html", "text/html; charset=utf-8");
+    if (path === "/" || path === "/index.html") return serveFile("public/index.html", "text/html; charset=utf-8");
+    if (path === "/admin" || path === "/admin.html") return serveFile("public/admin.html", "text/html; charset=utf-8");
 
     return new Response("Not found", { status: 404 });
   },
