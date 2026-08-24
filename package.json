@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "bun run server.ts",
     "start": "bun run server.ts"
   }
 }
