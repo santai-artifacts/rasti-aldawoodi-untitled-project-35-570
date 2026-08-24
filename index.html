@@ -445,6 +445,94 @@
     }
     .contact-link:hover { color: var(--accent); border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.05); }
 
+    /* ── BOOKING ── */
+    #book { background: var(--bg2); }
+    .booking-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .booking-box::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(56,189,248,0.05), transparent);
+      pointer-events: none;
+    }
+    .booking-intro { color: var(--muted); margin-bottom: 2rem; max-width: 520px; }
+    .booking-intro .tz {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--accent);
+      border: 1px solid rgba(56,189,248,0.3); border-radius: 999px; padding: 2px 10px;
+      margin-left: 0.5rem; white-space: nowrap;
+    }
+    .book-step-label {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--accent);
+      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.85rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .book-step-label .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3);
+      font-size: 0.62rem;
+    }
+    .book-block { position: relative; margin-bottom: 2rem; }
+    .book-block:last-child { margin-bottom: 0; }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip {
+      font-family: var(--mono); font-size: 0.78rem; color: var(--text);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.55rem 0.85rem; cursor: pointer; transition: all 0.18s;
+      display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: 1.2;
+    }
+    .chip:hover:not(:disabled) { border-color: rgba(56,189,248,0.5); color: var(--accent); }
+    .chip.selected { border-color: var(--accent); background: rgba(56,189,248,0.1); color: var(--accent); }
+    .chip:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+    .chip .chip-sub { font-size: 0.62rem; color: var(--muted); }
+    .chip.selected .chip-sub { color: var(--accent); }
+
+    .book-hint { color: var(--muted); font-size: 0.82rem; }
+
+    .book-form { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .book-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .book-field.full { grid-column: 1 / -1; }
+    .book-field label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+    .book-field input, .book-field textarea {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: var(--font); font-size: 0.9rem; padding: 0.65rem 0.85rem;
+      transition: border-color 0.2s; width: 100%; resize: vertical;
+    }
+    .book-field input:focus, .book-field textarea:focus { outline: none; border-color: var(--accent); }
+    .book-summary {
+      grid-column: 1 / -1;
+      font-size: 0.85rem; color: var(--muted);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.75rem 1rem;
+    }
+    .book-summary b { color: var(--accent); font-family: var(--mono); }
+    .book-submit-row { grid-column: 1 / -1; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .book-error { color: #f87171; font-size: 0.82rem; }
+
+    .book-success {
+      text-align: center; padding: 1rem 0;
+    }
+    .book-success .check {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.4);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;
+      color: var(--green);
+    }
+    .book-success h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .book-success p { color: var(--muted); max-width: 440px; margin: 0 auto 0.5rem; }
+    .book-success .detail { color: var(--text); font-family: var(--mono); font-size: 0.95rem; margin: 1rem 0 1.5rem; }
+    .book-success .detail b { color: var(--accent); }
+    .book-loading { color: var(--muted); font-family: var(--mono); font-size: 0.85rem; padding: 1rem 0; }
+
+    @media (max-width: 560px) { .book-form { grid-template-columns: 1fr; } }
+
     /* ── FOOTER ── */
     footer {
       padding: 2rem 5vw;
@@ -491,6 +579,7 @@
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#book">Book</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -505,8 +594,8 @@
       <p class="hero-subtitle">Software Engineer &amp; <span>CS Graduate</span></p>
       <p class="hero-desc">I build things — from graphics engines in C++ to real-time iOS apps to data-driven web platforms. Duke CS grad with a track record of shipping products people actually use.</p>
       <div class="hero-ctas">
-        <a href="#projects" class="btn btn-primary">View My Work</a>
-        <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+        <a href="#book" class="btn btn-primary">Book a Meeting</a>
+        <a href="#projects" class="btn btn-ghost">View My Work</a>
       </div>
       <div class="hero-links">
         <a href="https://github.com/rasti-najim" target="_blank" rel="noopener">
@@ -748,10 +837,70 @@
     </div>
   </section>
 
+  <!-- BOOK -->
+  <section id="book">
+    <div class="section-inner">
+      <div class="section-label">05. Book a Meeting</div>
+      <h2>Grab a Time</h2>
+      <div class="divider"></div>
+      <div class="booking-box fade-in">
+        <p class="booking-intro">Pick an evening slot that works for you and I'll be there. Meetings are 30 minutes.<span class="tz">Times shown in ET</span></p>
+
+        <!-- Step 1: date -->
+        <div class="book-block" id="step-date">
+          <div class="book-step-label"><span class="num">1</span> Choose a day</div>
+          <div class="chip-row" id="dateRow"><div class="book-loading">Loading availability…</div></div>
+        </div>
+
+        <!-- Step 2: time -->
+        <div class="book-block" id="step-time" style="display:none;">
+          <div class="book-step-label"><span class="num">2</span> Choose a time</div>
+          <div class="chip-row" id="timeRow"></div>
+        </div>
+
+        <!-- Step 3: details -->
+        <div class="book-block" id="step-form" style="display:none;">
+          <div class="book-step-label"><span class="num">3</span> Your details</div>
+          <form class="book-form" id="bookForm">
+            <div class="book-field">
+              <label for="bkName">Name</label>
+              <input id="bkName" type="text" required placeholder="Jane Doe" />
+            </div>
+            <div class="book-field">
+              <label for="bkEmail">Email</label>
+              <input id="bkEmail" type="email" required placeholder="jane@example.com" />
+            </div>
+            <div class="book-field full">
+              <label for="bkTopic">What would you like to talk about? <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+              <textarea id="bkTopic" rows="3" placeholder="A few words about what you'd like to discuss…"></textarea>
+            </div>
+            <div class="book-summary" id="bookSummary"></div>
+            <div class="book-submit-row">
+              <button type="submit" class="btn btn-primary" id="bookSubmit">Confirm Booking</button>
+              <span class="book-error" id="bookError"></span>
+            </div>
+          </form>
+        </div>
+
+        <!-- Success -->
+        <div class="book-success" id="bookSuccess" style="display:none;">
+          <div class="check">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <h3>You're booked!</h3>
+          <p>Thanks — I've got your meeting on the calendar.</p>
+          <div class="detail" id="successDetail"></div>
+          <p style="font-size:0.82rem;">A confirmation isn't emailed automatically yet, but your slot is reserved. I'll reach out at the email you provided.</p>
+          <button class="btn btn-ghost" id="bookAgain" style="margin-top:1rem;">Book another time</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact">
     <div class="section-inner">
-      <div class="section-label">05. Contact</div>
+      <div class="section-label">06. Contact</div>
       <div class="contact-box fade-in">
         <h3>Let's Build Something</h3>
         <p>I'm open to new opportunities, collaborations, and interesting problems. Drop me a line anytime.</p>
@@ -799,6 +948,142 @@
     document.querySelectorAll('.projects-grid .project-card').forEach((card, i) => {
       card.style.transitionDelay = `${i * 80}ms`;
     });
+
+    // ── BOOKING ──
+    (function () {
+      const dateRow = document.getElementById('dateRow');
+      const timeRow = document.getElementById('timeRow');
+      const stepTime = document.getElementById('step-time');
+      const stepForm = document.getElementById('step-form');
+      const bookForm = document.getElementById('bookForm');
+      const bookSuccess = document.getElementById('bookSuccess');
+      const summary = document.getElementById('bookSummary');
+      const errEl = document.getElementById('bookError');
+      const submitBtn = document.getElementById('bookSubmit');
+
+      let availability = [];
+      let selDate = null, selTime = null, selDateLabel = '', selTimeLabel = '';
+
+      function esc(s) {
+        return String(s || '').replace(/[&<>"']/g, (c) => (
+          { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+      }
+
+      async function load() {
+        try {
+          const res = await fetch('/api/slots');
+          const data = await res.json();
+          availability = (data.dates || []).filter((d) => d.hasOpen);
+          renderDates();
+        } catch (e) {
+          dateRow.innerHTML = '<div class="book-hint">Couldn\'t load availability. Please refresh and try again.</div>';
+        }
+      }
+
+      function renderDates() {
+        if (!availability.length) {
+          dateRow.innerHTML = '<div class="book-hint">No open evening slots in the next few weeks. Reach out via the contact section below and we\'ll find a time.</div>';
+          return;
+        }
+        dateRow.innerHTML = availability.map((d, i) => {
+          const [y, m, day] = d.date.split('-');
+          const parts = d.label.split(' '); // e.g. "Wed, Aug 26"
+          return `<button type="button" class="chip" data-i="${i}">
+            <span>${esc(parts[0])} ${esc(parts[1] || '')}</span>
+            <span class="chip-sub">${esc(parts[2] || '')}</span>
+          </button>`;
+        }).join('');
+        dateRow.querySelectorAll('.chip').forEach((chip) => {
+          chip.addEventListener('click', () => selectDate(Number(chip.dataset.i), chip));
+        });
+      }
+
+      function selectDate(i, chip) {
+        selDate = availability[i].date;
+        selDateLabel = availability[i].label;
+        selTime = null;
+        dateRow.querySelectorAll('.chip').forEach((c) => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        renderTimes(availability[i].slots);
+        stepTime.style.display = 'block';
+        stepForm.style.display = 'none';
+        bookSuccess.style.display = 'none';
+        stepTime.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function renderTimes(slots) {
+        timeRow.innerHTML = slots.map((s) => `
+          <button type="button" class="chip" data-time="${s.time}" data-label="${esc(s.label)}" ${s.available ? '' : 'disabled'}>
+            ${esc(s.label)}
+          </button>`).join('');
+        timeRow.querySelectorAll('.chip:not(:disabled)').forEach((chip) => {
+          chip.addEventListener('click', () => {
+            selTime = chip.dataset.time;
+            selTimeLabel = chip.dataset.label;
+            timeRow.querySelectorAll('.chip').forEach((c) => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            summary.innerHTML = `Meeting on <b>${esc(selDateLabel)}</b> at <b>${esc(selTimeLabel)} ET</b> · 30 min`;
+            stepForm.style.display = 'block';
+            errEl.textContent = '';
+            stepForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        });
+      }
+
+      bookForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errEl.textContent = '';
+        if (!selDate || !selTime) { errEl.textContent = 'Please pick a day and time first.'; return; }
+        const payload = {
+          name: document.getElementById('bkName').value.trim(),
+          email: document.getElementById('bkEmail').value.trim(),
+          topic: document.getElementById('bkTopic').value.trim(),
+          date: selDate,
+          time: selTime,
+        };
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Booking…';
+        try {
+          const res = await fetch('/api/book', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            errEl.textContent = data.error || 'Something went wrong. Please try again.';
+            if (res.status === 409) load(); // slot taken — refresh availability
+            return;
+          }
+          const c = data.confirmation;
+          document.getElementById('successDetail').innerHTML =
+            `<b>${esc(c.dateLabel)}</b> at <b>${esc(c.timeLabel)} ET</b>`;
+          stepForm.style.display = 'none';
+          stepTime.style.display = 'none';
+          document.getElementById('step-date').style.display = 'none';
+          bookSuccess.style.display = 'block';
+          bookForm.reset();
+        } catch (e) {
+          errEl.textContent = 'Network error. Please try again.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Confirm Booking';
+        }
+      });
+
+      document.getElementById('bookAgain').addEventListener('click', () => {
+        selDate = selTime = null;
+        bookSuccess.style.display = 'none';
+        document.getElementById('step-date').style.display = 'block';
+        stepTime.style.display = 'none';
+        stepForm.style.display = 'none';
+        load();
+        document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      load();
+    })();
 
     // Active nav link on scroll
     const sections = document.querySelectorAll('section[id]');

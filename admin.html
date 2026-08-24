@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookings — Admin</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080b12; --bg3: #161c26; --border: #1e2736;
+      --text: #e2e8f0; --muted: #64748b; --accent: #38bdf8; --green: #34d399; --red: #f87171;
+      --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.6; min-height: 100vh; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
+    h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem; }
+    .sub { color: var(--muted); font-family: var(--mono); font-size: 0.8rem; margin-bottom: 2rem; }
+    a.back { color: var(--muted); text-decoration: none; font-family: var(--mono); font-size: 0.8rem; }
+    a.back:hover { color: var(--accent); }
+
+    .gate { max-width: 360px; margin: 4rem auto; background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: center; }
+    .gate h2 { font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .gate p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
+    input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: var(--font); font-size: 0.9rem; padding: 0.7rem 0.9rem; margin-bottom: 0.75rem;
+    }
+    input:focus { outline: none; border-color: var(--accent); }
+    button {
+      background: var(--accent); color: #050810; border: none; border-radius: 8px; cursor: pointer;
+      font-family: var(--font); font-weight: 600; font-size: 0.9rem; padding: 0.7rem 1.25rem; transition: background 0.2s;
+    }
+    button:hover { background: #7dd3fc; }
+    .err { color: var(--red); font-size: 0.82rem; min-height: 1.1em; margin-top: 0.25rem; }
+
+    .stat-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .pill { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 0.35rem 0.9rem; }
+    .pill b { color: var(--accent); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 0.85rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.875rem; vertical-align: top; }
+    th { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    td .when { font-weight: 600; }
+    td .who { color: var(--text); }
+    td .email { color: var(--muted); font-family: var(--mono); font-size: 0.78rem; }
+    td .topic { color: var(--muted); font-size: 0.82rem; }
+    tr.past td { opacity: 0.5; }
+    .tag-past { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; margin-left: 0.4rem; }
+    .cancel { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 0.35rem 0.7rem; font-size: 0.78rem; font-weight: 500; }
+    .cancel:hover { border-color: var(--red); color: var(--red); background: rgba(248,113,113,0.06); }
+    .empty { color: var(--muted); text-align: center; padding: 3rem 1rem; font-size: 0.9rem; }
+    .loading { color: var(--muted); text-align: center; padding: 2rem; font-family: var(--mono); font-size: 0.85rem; }
+    @media (max-width: 560px) { .col-topic { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Gate -->
+    <div id="gate" class="gate">
+      <h2>Admin Access</h2>
+      <p>Enter your passcode to view bookings.</p>
+      <form id="gateForm">
+        <input id="pass" type="password" placeholder="Passcode" autocomplete="current-password" autofocus />
+        <button type="submit">Unlock</button>
+        <div class="err" id="gateErr"></div>
+      </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dash" style="display:none;">
+      <a class="back" href="/">← Back to site</a>
+      <h1 style="margin-top:0.75rem;">Bookings</h1>
+      <p class="sub">Meetings people have booked with you.</p>
+      <div class="stat-row">
+        <span class="pill">Upcoming: <b id="upcomingCount">0</b></span>
+        <span class="pill">Total: <b id="totalCount">0</b></span>
+      </div>
+      <div id="tableWrap"><div class="loading">Loading…</div></div>
+    </div>
+  </div>
+
+  <script>
+    let passcode = "";
+
+    const gate = document.getElementById("gate");
+    const dash = document.getElementById("dash");
+
+    document.getElementById("gateForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("gateErr");
+      err.textContent = "";
+      passcode = document.getElementById("pass").value;
+      const res = await fetch("/api/admin/bookings?passcode=" + encodeURIComponent(passcode));
+      if (res.status === 401) { err.textContent = "Incorrect passcode."; return; }
+      if (!res.ok) { err.textContent = "Something went wrong."; return; }
+      gate.style.display = "none";
+      dash.style.display = "block";
+      render(await res.json());
+    });
+
+    async function reload() {
+      const res = await fetch("/api/admin/bookings?passcode=" + encodeURIComponent(passcode));
+      if (res.ok) render(await res.json());
+    }
+
+    function esc(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) => (
+        { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+      ));
+    }
+
+    function render(data) {
+      const bookings = data.bookings || [];
+      const upcoming = bookings.filter((b) => !b.past);
+      document.getElementById("upcomingCount").textContent = upcoming.length;
+      document.getElementById("totalCount").textContent = bookings.length;
+      const wrap = document.getElementById("tableWrap");
+
+      if (!bookings.length) {
+        wrap.innerHTML = '<div class="empty">No bookings yet.</div>';
+        return;
+      }
+
+      const rows = bookings.map((b) => `
+        <tr class="${b.past ? "past" : ""}">
+          <td>
+            <div class="when">${esc(b.dateLabel)} · ${esc(b.timeLabel)} ET${b.past ? '<span class="tag-past">past</span>' : ""}</div>
+          </td>
+          <td>
+            <div class="who">${esc(b.name)}</div>
+            <div class="email">${esc(b.email)}</div>
+          </td>
+          <td class="col-topic"><div class="topic">${esc(b.topic) || "—"}</div></td>
+          <td style="text-align:right;">
+            <button class="cancel" data-id="${b.id}">Cancel</button>
+          </td>
+        </tr>`).join("");
+
+      wrap.innerHTML = `
+        <table>
+          <thead><tr><th>When (ET)</th><th>Who</th><th class="col-topic">Topic</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+
+      wrap.querySelectorAll(".cancel").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Cancel this booking? This frees up the slot.")) return;
+          btn.disabled = true;
+          const res = await fetch("/api/admin/cancel", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ id: Number(btn.dataset.id), passcode }),
+          });
+          if (res.ok) reload();
+          else btn.disabled = false;
+        });
+      });
+    }
+  </script>
+</body>
+</html>
